@@ -73,7 +73,7 @@ replacement = r'''                                    val answerResult = withCon
                                         completed ?: throw IllegalStateException("모든 무료 모델 호출 실패. 마지막 오류: $lastError")
                                     }
                                     lines.add(ChatLine("assistant", answerResult.first))'''
-s, n = pattern.subn(replacement, s, count=1)
+s, n = pattern.subn(lambda match: replacement, s, count=1)
 if n != 1: raise SystemExit(f"API request block: expected one match, got {n}")
 once('                                    status = "응답 완료"',
      '                                    status = "응답 완료 · \${answerResult.second}"',
