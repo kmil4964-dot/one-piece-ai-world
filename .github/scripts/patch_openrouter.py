@@ -102,3 +102,26 @@ once(old_ui, new_ui, "API settings UI")
 s = s.replace("\\" + chr(36) + "{", chr(36) + "{")
 p.write_text(s, encoding="utf-8")
 print("OpenRouter patch applied")
+
+# Give this build a separate Android package identity so it can coexist with
+# the previously installed app even when the debug signing certificate differs.
+gradle_files = list(Path("app").glob("**/build.gradle")) + list(Path("app").glob("**/build.gradle.kts"))
+matched = []
+for gradle_file in gradle_files:
+    if gradle_file.name != "build.gradle" and gradle_file.name != "build.gradle.kts":
+        continue
+    gradle_text = gradle_file.read_text(encoding="utf-8")
+    if "applicationId" not in gradle_text:
+        continue
+    gradle_text_new, count = re.subn(
+        r'(applicationId\\s*(?:=\\s*)?["\\'])([^"\\']+)(["\\'])',
+        lambda m: m.group(1) + (m.group(2) if m.group(2).endswith(".openrouter") else m.group(2) + ".openrouter") + m.group(3),
+        gradle_text,
+        count=1,
+    )
+    if count:
+        gradle_file.write_text(gradle_text_new, encoding="utf-8")
+        matched.append(str(gradle_file))
+if len(matched) != 1:
+    raise SystemExit(f"Expected exactly one applicationId in app Gradle files, found {len(matched)}: {matched}")
+print("Separate package ID applied:", matched[0])
