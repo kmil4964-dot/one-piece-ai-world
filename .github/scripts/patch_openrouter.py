@@ -99,5 +99,6 @@ new_ui = '''                    Text("OpenRouter 무료 모델 연결", style = 
                     Text("무료 모델도 제공자별 호출 제한이 있어. 모델 목록이 바뀌면 최신 OpenRouter 목록으로 수정해 줘.")
                     Text("API 키 발급: https://openrouter.ai/keys")'''
 once(old_ui, new_ui, "API settings UI")
+s = s.replace("\\" + chr(36) + "{", chr(36) + "{")
 p.write_text(s, encoding="utf-8")
 print("OpenRouter patch applied")
