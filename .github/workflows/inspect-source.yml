@@ -1,0 +1,11 @@
+name: Temporary source inspection
+on:
+  push:
+    branches: [main]
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print Kotlin source
+        run: unzip -p app.zip app/src/main/java/com/onepiece/world/MainActivity.kt
