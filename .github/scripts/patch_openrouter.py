@@ -114,7 +114,7 @@ for gradle_file in gradle_files:
     if "applicationId" not in gradle_text:
         continue
     gradle_text_new, count = re.subn(
-        r'(applicationId\\s*(?:=\\s*)?["\\'])([^"\\']+)(["\\'])',
+        r"applicationId\s*(?:=\s*)?([\'\"])([^\'\"]+)([\'\"])",
         lambda m: m.group(1) + (m.group(2) if m.group(2).endswith(".openrouter") else m.group(2) + ".openrouter") + m.group(3),
         gradle_text,
         count=1,
